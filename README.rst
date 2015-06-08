@@ -33,7 +33,7 @@ Configure Environment and Run
 
 #. Get started by calling the DCOS Kubernetes CLI's help::
 
-    dcos kubernetes help
+    dcos kubectl --help
 
 Running Tests:
 --------------

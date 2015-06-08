@@ -6,13 +6,9 @@ def test_help():
         ['dcos-kubernetes', 'kubernetes', '--help'])
 
     assert returncode == 0
-    assert stdout == b"""DCOS Kubernetes Example Subcommand
+    assert stdout == b"""DCOS Kubernetes Subcommand
 
 Usage:
-    dcos kubernetes info
-
-Options:
-    --help           Show this screen
-    --version        Show version
+    dcos kubectl parameters...
 """
     assert stderr == b''
