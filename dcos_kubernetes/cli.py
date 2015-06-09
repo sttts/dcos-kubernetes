@@ -85,13 +85,23 @@ def main():
         print("Error: dcos core.dcos_url is not set")
         sys.exit(2)
 
-    # call kubectl with parameters
-    from subprocess import call
+    # prepare kubectl environment
     import urlparse
     env = os.environ.copy()
     env['KUBERNETES_MASTER'] = urlparse.urljoin(docs_url, "service/kubernetes/api")
-    rc = call([kubectl_path] + args, env=env)
-    sys.exit(rc)
+
+    # call kubectl with parameters
+    import subprocess
+    proc = subprocess.Popen([kubectl_path] + args, stdout=subprocess.PIPE, env=env)
+    found_help_line = False
+    for line in iter(proc.stdout.readline,''):
+        if line.find("kubectl controls the Kubernetes cluster manager") != -1:
+            found_help_line = True
+        if found_help_line:
+            sys.stdout.write(line.replace("kubectl", "dcos kubernetes"))
+        else:
+            sys.stdout.write(line)
+    sys.exit(proc.returncode)
 
 if __name__ == "__main__":
     os.environ[dcos.constants.DCOS_CONFIG_ENV] = os.path.join(os.getenv("HOME"), dcos.constants.DCOS_DIR, "dcos.toml")
